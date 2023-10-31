@@ -28,7 +28,7 @@ public class Department {
     //用不到
 //    private Long manager_id;
 //    //用不到
-//    private Long parent_id;
+    private long parentId;
     /**
      * 配置父部门
      */

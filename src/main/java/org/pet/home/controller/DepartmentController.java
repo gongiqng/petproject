@@ -28,13 +28,25 @@ public class DepartmentController {
     public DepartmentController(IDepartmentService departmentService) {
         this.departmentService = departmentService;
     }
-
+    @ApiOperation("添加部门")
+    @PostMapping("/create")
+    public Result add(@RequestBody Department  department){
+        System.out.println("添加"+department);
+        try {
+            departmentService.add(department);
+            return ResultGenerator.genSuccessResult(department);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultGenerator.genErrorResult(NetCode.CREATE_DEPARTMENT_ERROR, "保存对象失败" + e.getMessage());
+        }
+    }
     /**
      * 添加对象
      */
     @ApiOperation("添加部门")
     @PostMapping("/add")
-    public Result add(@RequestBody Departmentparam departmentparam) {
+    public Result add(@org.springframework.web.bind.annotation.RequestBody Departmentparam departmentparam) {
+        System.out.println("添加"+departmentparam);
         try {
             Department department1 = new Department();
             department1.setSn(departmentparam.getSn());
@@ -77,7 +89,7 @@ public class DepartmentController {
       Department department=  departmentService.find(id);
         return ResultGenerator.genSuccessResult(department);
     }
-    @GetMapping("/getAll")
+    @GetMapping("/list")
     public Result list() {
        List<Department>departments=  departmentService.findAll();
         return ResultGenerator.genSuccessResult(departments);

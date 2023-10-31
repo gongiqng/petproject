@@ -52,5 +52,9 @@ private CityMapper cityMapper;
         departmentMapper.update(department);
     }
 
+    @Test
+    public  void teat(){
+        System.out.println(departmentMapper.find(4l));
+    }
 }
 

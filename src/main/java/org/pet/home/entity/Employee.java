@@ -20,4 +20,6 @@ public class Employee {
     private String password;
     private int age;
     private int state;
+    private  Long did;
+    private  Department department;
 }

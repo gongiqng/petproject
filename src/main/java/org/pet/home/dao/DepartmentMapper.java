@@ -69,7 +69,7 @@ void add(Department d);
                     property = "parent",
                     column = "parent_id",
                     javaType = Department.class,
-                    one = @One(select = "org.pet.home.dao.DepartmentMapper.findSubDepartments")
+                    one = @One(select = "org.pet.home.dao.DepartmentMapper.findParentDepartment")
             ),
             @Result(
                     property = "children",
