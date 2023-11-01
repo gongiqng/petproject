@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @description:TODO
  * @author: 龚强
@@ -45,5 +47,20 @@ public class EmployeeServiceImpl implements IEmployeeService {
     @Override
     public void update(Employee employee) {
   employeeMapper.update(employee);
+    }
+
+    @Override
+    public Employee findById(Long id) {
+        return employeeMapper.findById(id);
+    }
+
+    @Override
+    public Employee findIncumbency(Long id) {
+        return employeeMapper.findIncumbency(id);
+    }
+
+    @Override
+    public List<Employee> findAll() {
+        return employeeMapper.findAll();
     }
 }

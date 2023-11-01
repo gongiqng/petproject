@@ -14,6 +14,8 @@ import org.pet.home.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @description:TODO
  * @author: 龚强
@@ -70,11 +72,22 @@ public class EmployeeController {
     public Result update(Employee employee) {
         try {
             employeeService.update(employee);
-            return ResultGenerator.genSuccessResult();
+            return ResultGenerator.genSuccessResult("更新成功");
         } catch (Exception e) {
             e.printStackTrace();
             return ResultGenerator.genErrorResult(NetCode.UPDATE_EMPLOYEE_ERROR, "更新员工失败" + e.getMessage());
         }
+    }
+    @GetMapping("/find")
+    public Result find(Long id){
+        Employee employee = employeeService.findById(id);
+        return  ResultGenerator.genSuccessResult(employee);
+    }
+
+    @GetMapping("/findall")
+    public Result findAll(){
+        List<Employee> employees = employeeService.findAll();
+        return ResultGenerator.genSuccessResult(employees);
     }
 }
 

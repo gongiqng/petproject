@@ -6,6 +6,8 @@ import org.pet.home.entity.Employee;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @description:TODO
  * @author: 龚强
@@ -27,4 +29,13 @@ public interface EmployeeMapper {
             "age=#{age},state=#{state} ,did=#{did}" +
             "where id=#{id}")
     void update(Employee employee);
+    @Select("select * from t_employee where id=#{id}")
+    Employee findById(Long id);
+    /*
+    *查找在职员工
+     */
+    @Select("select * from t_employee where id=#{id} and state=0")
+    Employee findIncumbency(Long id);
+    @Select("select * from t_employee")
+    List<Employee> findAll();
 }

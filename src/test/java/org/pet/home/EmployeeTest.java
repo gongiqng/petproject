@@ -20,14 +20,15 @@ public class EmployeeTest {
     private EmployeeMapper employeeMapper;
     @Test
     public  void  testEmployeeMapper(){
-        Employee employee=new Employee();
-        employee.setUsername("张三");
-        employee.setEmail("2574@qq.com");
-        employee.setPhone("158980");
-        employee.setPassword("111");
-        employee.setState(0);
-        employee.setAge(28);
-        employee.setDid(11l);
-        employeeMapper.add(employee);
+//        Employee employee=new Employee();
+//        employee.setUsername("张三");
+//        employee.setEmail("2574@qq.com");
+//        employee.setPhone("158980");
+//        employee.setPassword("111");
+//        employee.setState(0);
+//        employee.setAge(28);
+//        employee.setDid(11l);
+//        employeeMapper.add(employee);
+        System.out.println(employeeMapper.findAll());
     }
 }
