@@ -60,14 +60,18 @@ public class LoginController {
         }
     }
     @PostMapping("/login")
-    public Result login(@RequestBody Employee employee) {
-        try {
-            Result result = userService.adminLogin(employee);
-            return result;
-        } catch (Exception e) {
-            return ResultGenerator.genFailResult("未知的异常"+e.getMessage());
-        }
+    public Result login(@RequestBody Employee employee,@RequestParam String code) {
+        if(userService.verifyCode(employee.getUsername(),code)) {
+            try {
+                Result result = userService.adminLogin(employee);
+                return result;
+            } catch (Exception e) {
+                return ResultGenerator.genFailResult("未知的异常" + e.getMessage());
+            }
+        }else {
 
+        }
+      return  ResultGenerator.genFailResult("验证码不正确");
     }
     //注册
     public void register(){

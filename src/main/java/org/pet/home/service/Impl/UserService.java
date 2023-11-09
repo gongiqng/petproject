@@ -34,11 +34,13 @@ public class UserService implements IUserService {
 
     private EmployeeMapper employeeMapper;
     private RedisTemplate redisTemplate;
+    private VerificationCodeService verificationCodeService;
     @Autowired
-    public UserService(RedisService redisService, EmployeeMapper employeeMapper, RedisTemplate redisTemplate) {
+    public UserService(RedisService redisService, EmployeeMapper employeeMapper, RedisTemplate redisTemplate,VerificationCodeService verificationCodeService) {
         this.redisService = redisService;
         this.employeeMapper=employeeMapper;
         this.redisTemplate=redisTemplate;
+        this.verificationCodeService=verificationCodeService;
     }
     @Override
     public Result sendRegisterCode(String phone) {
@@ -84,16 +86,16 @@ public class UserService implements IUserService {
 
     @Override
     public Result adminLogin(Employee employee) {
-        if (StringUtil.isEmpty(employee.getUsername())) {
-            return ResultGenerator.genErrorResult(NetCode.USERNAME_INVALID, "用户名不能为空");
+        if (StringUtil.isEmpty(employee.getPhone())) {
+            return ResultGenerator.genErrorResult(NetCode.PHONE_INVALID, "手机号名不能为空");
         }
         if (StringUtil.isEmpty(employee.getPassword())) {
             return ResultGenerator.genErrorResult(NetCode.PASSWORD_INVALID, "密码不能为空");
         }
-       // employee.setPassword(MD5Util.MD5Encode(employee.getPassword(), "utf-8"));
-        Employee e=employeeMapper.login(employee);
+        // employee.setPassword(MD5Util.MD5Encode(employee.getPassword(), "utf-8"));
+        Employee e=employeeMapper.select(employee.getPhone(),employee.getPassword());
         if(e==null){
-            return ResultGenerator.genFailResult("账号或密码错误");
+            return ResultGenerator.genFailResult("手机号号或密码错误");
         }
         else {
             //生成一个token
@@ -106,4 +108,10 @@ public class UserService implements IUserService {
             return ResultGenerator.genSuccessResult(e);
         }
     }
+    //验证码校对
+    public boolean verifyCode(String username, String code) {
+        String savedCode = verificationCodeService.getCodeByUsername(username);
+        return code.equals(savedCode);
+    }
+
 }
