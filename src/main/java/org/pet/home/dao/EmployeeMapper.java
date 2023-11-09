@@ -15,7 +15,6 @@ import java.util.List;
  **/
 @Mapper
 @Repository
-@Service
 public interface EmployeeMapper {
     @Insert("insert into t_employee(username,email,phone,password,age,state,did)" +
             "values(#{username},#{email},#{phone},#{password},#{age},#{state},#{did})")
@@ -25,9 +24,8 @@ public interface EmployeeMapper {
     void remove(Long id);
 
     @Update("update t_employee set " +
-            "username=#{username},email=#{email},phone=#{phone}," +
-            "age=#{age},state=#{state} ,did=#{did}" +
-            "where id=#{id}")
+            " username=#{username},email=#{email},phone=#{phone},password=#{password},age=#{age},state=#{state} " +
+            " where id=#{id}")
     void update(Employee employee);
     @Select("select * from t_employee where id=#{id}")
     Employee findById(Long id);
@@ -38,4 +36,11 @@ public interface EmployeeMapper {
     Employee findIncumbency(Long id);
     @Select("select * from t_employee")
     List<Employee> findAll();
+//    @Select("select * from t_employee where username=#{username} and password=#{password}")
+//    Employee login(Employee employee);
+     /*登录 */
+   @Select("select * from t_employee where username=#{username} and password=#{password}")
+   Employee login(Employee employee);
+    @Select("select * from t_employee where phone=#{phone} and password=#{password}")
+    Employee select(String phone,String password);
 }

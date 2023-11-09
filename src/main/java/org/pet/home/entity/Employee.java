@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 /**
  * @description:TODO
  * @author: 龚强
@@ -12,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Data
-public class Employee {
+public class Employee  implements Serializable {
     public Long id;
     private String username;
     private String email;
@@ -22,4 +24,5 @@ public class Employee {
     private int state;
     private  Long did;
     private  Department department;
+    private String token;
 }

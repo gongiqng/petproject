@@ -1,7 +1,6 @@
 package org.pet.home.controller;
 
 import io.swagger.annotations.Api;
-import org.apache.ibatis.annotations.Param;
 import org.pet.home.entity.Department;
 import org.pet.home.entity.Employee;
 import org.pet.home.net.NetCode;
@@ -11,10 +10,15 @@ import org.pet.home.service.IEmployeeService;
 import org.pet.home.util.MD5Util;
 import org.pet.home.util.ResultGenerator;
 import org.pet.home.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @description:TODO
@@ -27,11 +31,16 @@ import java.util.List;
 public class EmployeeController {
     private IDepartmentService departmentService;
     private IEmployeeService employeeService;
+    private RedisTemplate redisTemplate;
+
+    private Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+
 
     @Autowired
-    public EmployeeController(IDepartmentService departmentService, IEmployeeService employeeService) {
+    public EmployeeController(IDepartmentService departmentService, IEmployeeService employeeService,RedisTemplate redisTemplate) {
         this.departmentService = departmentService;
         this.employeeService = employeeService;
+        this.redisTemplate = redisTemplate;
     }
 
     @PostMapping("/add")
@@ -89,5 +98,27 @@ public class EmployeeController {
         List<Employee> employees = employeeService.findAll();
         return ResultGenerator.genSuccessResult(employees);
     }
+    @PostMapping(value = "/login")
+    public Result login(@RequestBody Employee employee) {
+        if (StringUtil.isEmpty(employee.getUsername())) {
+            return ResultGenerator.genErrorResult(NetCode.USERNAME_INVALID, "用户名不能为空");
+        }
+        if (StringUtil.isEmpty(employee.getPassword())) {
+            return ResultGenerator.genErrorResult(NetCode.PASSWORD_INVALID, "密码不能为空");
+        }
+        //employee.setPassword(MD5Util.MD5Encode(employee.getPassword(), "utf-8"));
+        Employee e = employeeService.login(employee);
+        if (e == null) {
+            return ResultGenerator.genFailResult("账号或密码错误");
+        } else {
+            String token = UUID.randomUUID().toString();
+            logger.info("token__" + token);
+            e.setToken(token);
+            e.setPassword(null);
+            redisTemplate.opsForValue().set(token, e, 30, TimeUnit.MINUTES);
+            return ResultGenerator.genSuccessResult(e);
+        }
+    }
+
 }
 

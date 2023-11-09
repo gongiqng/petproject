@@ -11,13 +11,6 @@ import java.util.List;
  * @data:
  **/
 public interface IDepartmentService {
-
-
-
-
-
-
-
     void add(Department d);  //新增
     void remove(Long id);  //删除
     void update(Department d);  //修改

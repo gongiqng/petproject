@@ -21,8 +21,10 @@ import java.util.List;
 @Service
 public class EmployeeServiceImpl implements IEmployeeService {
 
-   private   EmployeeMapper employeeMapper;
+    private   EmployeeMapper employeeMapper;
     private DepartmentMapper departmentMapper;
+
+    @Autowired
     public EmployeeServiceImpl(EmployeeMapper employeeMapper,DepartmentMapper departmentMapper){
         this.employeeMapper=employeeMapper;
         this.departmentMapper=departmentMapper;
@@ -62,5 +64,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
     @Override
     public List<Employee> findAll() {
         return employeeMapper.findAll();
+    }
+
+    @Override
+    public Employee login(Employee employee) {
+        return employeeMapper.login(employee);
     }
 }
