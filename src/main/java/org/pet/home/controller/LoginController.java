@@ -2,6 +2,7 @@ package org.pet.home.controller;
 
 import org.pet.home.common.Constants;
 import org.pet.home.entity.Employee;
+import org.pet.home.entity.Users;
 import org.pet.home.net.NetCode;
 import org.pet.home.net.Result;
 import org.pet.home.service.Impl.RedisService;
@@ -31,7 +32,7 @@ public class LoginController {
         this.userService = userService;
     }
 
-    //登录
+    ////发验证码的
     @GetMapping("/getverifycode")
     public Result sendVerifyCode(@RequestParam String phone){
         return userService.sendRegisterCode(phone);
@@ -46,9 +47,10 @@ public class LoginController {
         if(!RegexUtil.isMobileExact(phone)){
             return ResultGenerator.genErrorResult(NetCode.PHONE_INVALID,"手机号不合法");
         }
-        Set<String> expiredV = redisService.getSet(phone+phone);
+       Set<String> expiredV = redisService.getSet(phone+phone);
         String e=new ArrayList(expiredV).get(0).toString();
         System.out.println(e);
+        //String e = redisService.getValue(phone+phone);
         if(StringUtil.isNullOrNullStr(e)){
             return  ResultGenerator.genFailResult("验证码过期");
         }else {
@@ -59,22 +61,45 @@ public class LoginController {
             }
         }
     }
-    @PostMapping("/login")
-    public Result login(@RequestBody Employee employee,@RequestParam String code) {
-        if(userService.verifyCode(employee.getUsername(),code)) {
+
+    /**
+     * 管理员登录
+     * @param users
+     * @return
+     */
+    @PostMapping("/adminlogin")
+    public Result login(@RequestBody Users users) {
             try {
-                Result result = userService.adminLogin(employee);
+                Result result = userService.adminLogin(users);
                 return result;
             } catch (Exception e) {
                 return ResultGenerator.genFailResult("未知的异常" + e.getMessage());
             }
-        }else {
+    }
 
+    /**
+     * 普通用户登录
+     * @param user
+     * @return
+     */
+    @PostMapping("/userLogin")
+    public Result userLogin(@RequestBody Users user) {
+        try {
+            Result result= userService.userLogin(user);
+            return result;
+        } catch (Exception e) {
+            return ResultGenerator.genFailResult("未知的异常"+e.getMessage());
         }
-      return  ResultGenerator.genFailResult("验证码不正确");
     }
-    //注册
-    public void register(){
 
+    @PostMapping("/register")
+    public Result register(@RequestBody Users user) {
+        try {
+            Result result = userService.register(user);
+            return result;
+        } catch (Exception e) {
+            return ResultGenerator.genFailResult("未知的异常"+e.getMessage());
+        }
     }
+
 }

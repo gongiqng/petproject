@@ -69,4 +69,5 @@ public class NetCode {
      * 密码不能为空
      */
     public static final int PASSWORD_INVALID = 0x25;
+    public static final int AGE_INVALID =0x26 ;
 }

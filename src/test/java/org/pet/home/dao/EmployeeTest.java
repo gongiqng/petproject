@@ -1,4 +1,4 @@
-package org.pet.home;
+package org.pet.home.dao;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
