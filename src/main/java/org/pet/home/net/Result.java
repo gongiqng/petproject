@@ -22,6 +22,8 @@ public class Result<T>{
         this.message = message;
     }
 
+
+
     public int getResultCode() {
         return resultCode;
     }

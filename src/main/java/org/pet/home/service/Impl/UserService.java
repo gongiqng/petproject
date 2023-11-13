@@ -1,24 +1,23 @@
 package org.pet.home.service.Impl;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.pet.home.common.Constants;
 import org.pet.home.dao.EmployeeMapper;
 import org.pet.home.entity.CodeResBean;
+import org.pet.home.entity.Employee;
 import org.pet.home.entity.Users;
 import org.pet.home.net.NetCode;
 import org.pet.home.net.Result;
+import org.pet.home.net.param.LoginParam;
 import org.pet.home.service.IUserService;
 import org.pet.home.service.IUsersService;
-import org.pet.home.util.MD5Util;
-import org.pet.home.util.RegexUtil;
-import org.pet.home.util.ResultGenerator;
-import org.pet.home.util.StringUtil;
+import org.pet.home.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-
-
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -49,7 +48,6 @@ public class UserService implements IUserService {
         if(!RegexUtil.isMobileExact(phone)){
             return ResultGenerator.genErrorResult(NetCode.PHONE_INVALID,"手机号不合法");
         }
-
         //已被注册
         if(!RegexUtil.isMobileExact(phone)){
             return ResultGenerator.genErrorResult(NetCode.PHONE_INVALID,"手机号已注册");
@@ -89,34 +87,33 @@ public class UserService implements IUserService {
 
     /**
      * 管理员登录
-     * @param users
+     * @param employee
      * @return
      */
-    @Override
-    public Result adminLogin(Users users) {
-        if (StringUtil.isEmpty(users.getPhone())) {
-            return ResultGenerator.genErrorResult(NetCode.USERNAME_INVALID, "手机号不能为空");
-        }
-        if (StringUtil.isEmpty(users.getPassword())) {
-            return ResultGenerator.genErrorResult(NetCode.PASSWORD_INVALID, "密码不能为空");
-        }
-        // employee.setPassword(MD5Util.MD5Encode(employee.getPassword(), "utf-8"));
-       // Employee e=employeeMapper.login(employee);
-        Users u=iUsersService.getAdmin(users.getPhone(), users.getPassword());
-        if(u==null){
-            return ResultGenerator.genFailResult("手机号或密码错误");
-        }
-        else {
-            //生成一个token
-            String token= UUID.randomUUID().toString();
-            logger.info("token__"+token);
-            u.setToken(token);
-            u.setPassword(null);
-            //30分钟token过期
-            redisTemplate.opsForValue().set(token,u,30, TimeUnit.MINUTES);
-            return ResultGenerator.genSuccessResult(u);
-        }
-    }
+//    @Override
+//    public Result adminLogin(Employee employee) {
+//        if (StringUtil.isEmpty(employee.getUsername())) {
+//            return ResultGenerator.genErrorResult(NetCode.USERNAME_INVALID, "用户名号不能为空");
+//        }
+//        if (StringUtil.isEmpty(employee.getPassword())) {
+//            return ResultGenerator.genErrorResult(NetCode.PASSWORD_INVALID, "密码不能为空");
+//        }
+//        // employee.setPassword(MD5Util.MD5Encode(employee.getPassword(), "utf-8"));
+//        Employee e=employeeMapper.login(employee);
+//        if(e==null){
+//            return ResultGenerator.genFailResult("用户名号或密码错误");
+//        }
+//        else {
+//            //生成一个token
+//            String token= UUID.randomUUID().toString();
+//            logger.info("token__"+token);
+//            e.setToken(token);
+//            e.setPassword(null);
+//            //30分钟token过期
+//            redisTemplate.opsForValue().set(token,e,30, TimeUnit.MINUTES);
+//            return ResultGenerator.genSuccessResult(e);
+//        }
+//    }
 
     /**
      * 注册
@@ -134,8 +131,8 @@ public class UserService implements IUserService {
         if (StringUtil.isEmpty(user.getPassword())) {
             user.setPassword(MD5Util.MD5Encode("123456", "utf-8"));
         }
-        if (user.getAge() < 10) {
-            return ResultGenerator.genErrorResult(NetCode.AGE_INVALID, "年龄不能小于10");
+        if (user.getAge() < 0) {
+            return ResultGenerator.genErrorResult(NetCode.AGE_INVALID, "年龄不能小于0");
         }
         Users u = iUsersService.selectPhone(user.getPhone());
         if (u != null) {
@@ -150,21 +147,47 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
+    public Result adminlogin(LoginParam loginParam) {
+        System.out.println(loginParam);
+        //判断账号密码是不是空
+        if (StringUtil.isEmpty(loginParam.getPhone())) {
+            return ResultGenerator.genErrorResult(NetCode.PHONE_INVALID, "手机号不能为空");
+        }
+        if (StringUtil.isEmpty(loginParam.getPassword())) {
+            return ResultGenerator.genErrorResult(NetCode.USERNAME_INVALID, "密码不能为空");
+        }
+        //密码md5加密
+        loginParam.setPassword(MD5Util.MD5Encode(loginParam.getPassword(), "utf-8"));
+        //从数据库找这个人
+        Users users = iUsersService.getAdmin(loginParam.getPhone(),loginParam.getPassword());
+        if (users != null) {
+            //如果有 加个token
+            String token = UUID.randomUUID().toString();
+            users.setToken(token);
+            users.setPassword(null);
+            redisTemplate.opsForValue().set(token, users, 30, TimeUnit.MINUTES);
+//            logger.info("token__"+token);
+            return ResultGenerator.genSuccessResult(users);
+        }
+        return ResultGenerator.genFailResult("你不是管理员");
+    }
+
     /**
      * 普通用户登录
-     * @param user
+     * @param loginParam
      * @return
      */
     @Override
-    public Result userLogin(Users user) {
-        if (StringUtil.isEmpty(user.getPhone())) {
+    public Result userLogin(LoginParam loginParam) {
+        if (StringUtil.isEmpty(loginParam.getPhone())) {
             return ResultGenerator.genErrorResult(NetCode.PHONE_INVALID, "手机号不能为空");
         }
-        if (StringUtil.isEmpty(user.getPassword())) {
+        if (StringUtil.isEmpty(loginParam.getPassword())) {
             return ResultGenerator.genErrorResult(NetCode.PASSWORD_INVALID, "密码不能为空");
         }
-        user.setPassword(MD5Util.MD5Encode(user.getPassword(), "utf-8"));
-        Users u=iUsersService.getUser(user.getPhone(), user.getPassword());
+        loginParam.setPassword(MD5Util.MD5Encode(loginParam.getPassword(), "utf-8"));
+        Users u=iUsersService.getUser(loginParam.getPhone(), loginParam.getPassword());
         if (u == null) {
             return ResultGenerator.genFailResult("账号或密码错误");
         } else {
