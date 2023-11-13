@@ -4,6 +4,7 @@ import org.pet.home.entity.Employee;
 import org.pet.home.entity.Users;
 import org.pet.home.net.Result;
 import org.pet.home.net.param.LoginParam;
+import org.pet.home.net.param.RegisterParam;
 
 /**
  * @description:TODO
@@ -16,7 +17,7 @@ public interface IUserService {
      */
     Result sendRegisterCode(String phone);
    // Result adminLogin(Employee employee);
-    Result register(Users user);
+    Result register(RegisterParam registerParam);
     Result adminlogin(LoginParam loginParam);
 
     Result userLogin(LoginParam loginParam);

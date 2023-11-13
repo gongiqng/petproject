@@ -8,11 +8,12 @@ import lombok.Data;
  * @data:
  **/
 @Data
-public class LoginParam {
+public class RegisterParam {
+    private String code;
+    private String username;
     private String phone;
     private String password;
-    private String username;
-    //type 1管理员 type 0用户
-    private int type;
-    private  String code;//验证码
+    private int state;
+    private int age;
+    private Long registerTime;
 }

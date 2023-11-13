@@ -19,12 +19,11 @@ import java.util.List;
 @Service
 public class ShopServiceImpl implements IShopService {
 
-  private ShopMapper shopMapper;
+   private ShopMapper shopMapper;
 
     @Autowired
     public ShopServiceImpl(ShopMapper shopMapper) {
         this.shopMapper = shopMapper;
-
     }
 
     @Override
@@ -65,5 +64,15 @@ public class ShopServiceImpl implements IShopService {
     @Override
     public int count() {
         return shopMapper.count();
+    }
+
+    @Override
+    public Shop findById(long id) {
+        return shopMapper.findById(id);
+    }
+
+    @Override
+    public Shop findByAddress(String address) {
+        return shopMapper.findByAddress(address);
     }
 }

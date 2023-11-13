@@ -20,7 +20,7 @@ import java.net.URLEncoder;
  * @data:
  **/
 public class GaoDeMapUtil {
-    public static final String KEY = "a74fa72290a51819932e8fc1b1129c34";
+    public static final String KEY = "cb8dc1ceaacf132401b1f1ea462753dc";
     public static final String URL = "https://restapi.amap.com/v3/geocode/geo?address=";
 
     public static Location getLngAndLag(String address) throws UnsupportedEncodingException {
@@ -44,11 +44,12 @@ public class GaoDeMapUtil {
             JSONArray sddressArr = JSON.parseArray(a.get("geocodes").toString());
             JSONObject c = JSON.parseObject(sddressArr.get(0).toString());
 
+            String formattedAddress = c.get("formatted_address").toString();
             String location = c.get("location").toString();
             String[] lngAndLat = location.split(",");
             double longitude = Double.parseDouble(lngAndLat[0]);
             double latitude = Double.parseDouble(lngAndLat[1]);
-            return new Location(longitude, latitude);
+            return new Location(formattedAddress,longitude, latitude);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("失败!");

@@ -2,6 +2,7 @@ package org.pet.home.service.Impl;
 
 import org.pet.home.dao.UsersMapper;
 import org.pet.home.entity.Users;
+import org.pet.home.net.param.RegisterParam;
 import org.pet.home.service.IUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,8 @@ public class UsersService implements IUsersService {
         this.usersMapper = usersMapper;
     }
     @Override
-    public int register(Users user) {
-        return usersMapper.register(user);
+    public int register(RegisterParam registerParam) {
+        return usersMapper.register(registerParam);
     }
 
     @Override
@@ -37,5 +38,10 @@ public class UsersService implements IUsersService {
     @Override
     public Users selectPhone(String phone) {
         return usersMapper.selectPhone(phone);
+    }
+
+    @Override
+    public Users findById(long id) {
+        return usersMapper.findById(id);
     }
 }

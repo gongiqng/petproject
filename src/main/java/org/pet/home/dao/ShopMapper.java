@@ -52,4 +52,6 @@ public interface ShopMapper {
 
     @Select("SELECT COUNT(*) FROM t_shop")
     int count();
+    @Select("select * from t_shop where address=#{address}")
+    Shop findByAddress(String address);
 }

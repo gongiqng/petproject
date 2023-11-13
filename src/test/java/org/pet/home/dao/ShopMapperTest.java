@@ -38,9 +38,9 @@ public class ShopMapperTest {
     @Test
     public void updateTest() {
         Shop shop=shopMapper.findById(30l);
-        shop.setAddress("456");
-        shop.setState(0);
-        shopMapper.update(shop);
+//        shop.setAddress("456");
+//        shop.setState(0);
+//        shopMapper.update(shop);
         System.out.println(shop);
     }
 }

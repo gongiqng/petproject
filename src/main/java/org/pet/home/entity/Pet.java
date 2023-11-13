@@ -15,4 +15,8 @@ public class Pet {
     private String type;
     //描述
     private String description;
+    public Pet(String type, String description){
+        this.type = type;
+        this.description = description;
+    }
 }

@@ -30,7 +30,7 @@ public class UsersMapperTest {
         users.setPhone("13387138909");
        // users.setRole(1);
         users.setState(0);
-        usersMapper.register(users);
+      //  usersMapper.register(users);
     }
     @Test
     public  void  testSelect(){

@@ -19,4 +19,7 @@ public interface IShopService {
     void update(Shop shop);
     List<Shop> paginationList(@Param("offset") int offset, @Param("pageSize") int pageSize);
     int count();
+    Shop findById(long id);
+
+    Shop findByAddress(String address);
 }

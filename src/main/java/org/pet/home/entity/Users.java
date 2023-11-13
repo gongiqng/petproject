@@ -2,13 +2,15 @@ package org.pet.home.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @description:TODO
  * @author: 龚强
  * @data:
  **/
 @Data
-public class Users {
+public class Users implements Serializable {
     //用户id
     private Long id;
     //用户名

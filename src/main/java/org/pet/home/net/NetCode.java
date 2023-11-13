@@ -70,4 +70,12 @@ public class NetCode {
      */
     public static final int PASSWORD_INVALID = 0x25;
     public static final int AGE_INVALID =0x26 ;
+    public static final int CODE_ERROR = 0x27;
+    public static final int CODE_LAPSE =0x28 ;
+    public static final int PET_NAME_INVALID =0X29 ;
+    public static final int ADDRESS_INVALID = 0X30;
+    public static final int SEX_INVALID = 0X31;
+    public static final int ISINOCULATION_INVALID =0X32;
+    public static final int BIRTH_INVALID = 0X33;
+    public static final int ID_INVALID = 0x34;
 }

@@ -9,6 +9,7 @@ import org.pet.home.entity.Users;
 import org.pet.home.net.NetCode;
 import org.pet.home.net.Result;
 import org.pet.home.net.param.LoginParam;
+import org.pet.home.net.param.RegisterParam;
 import org.pet.home.service.Impl.RedisService;
 import org.pet.home.service.Impl.UserService;
 import org.pet.home.util.*;
@@ -50,7 +51,7 @@ public class LoginController {
     }
 
     //阿里云发验证码的
-    @GetMapping("/sendcode")
+    @GetMapping("/getverifycode")
     public Result SendCode(@RequestParam String phone)  {
         /**
          * 排除手机号是空的状态
@@ -83,6 +84,7 @@ public class LoginController {
         try {
             HttpResponse response = HttpUtils.doPost(host, path, method, headers, querys, bodys);
             String result = EntityUtils.toString(response.getEntity());
+            redisTemplate.opsForValue().set(phone, code, 300, TimeUnit.SECONDS);
             return ResultGenerator.genSuccessResult(result);
         }catch (Exception e){
             e.printStackTrace();
@@ -91,20 +93,6 @@ public class LoginController {
         return ResultGenerator.genFailResult("发送验证码失败！");
     }
 
-    //处理流异常的状态
-    private String convertStreamToString(InputStream is) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            return sb.toString();
-        } catch (IOException e) {
-            // 处理异常
-            return null;
-        }
-    }
 //    @GetMapping("/getverifycode")
 //    public Result sendVerifyCode(@RequestParam String phone){
 //        return userService.sendRegisterCode(phone);
@@ -119,10 +107,13 @@ public class LoginController {
         if(!RegexUtil.isMobileExact(phone)){
             return ResultGenerator.genErrorResult(NetCode.PHONE_INVALID,"手机号不合法");
         }
-       Set<String> expiredV = redisService.getSet(phone+phone);
-        String e=new ArrayList(expiredV).get(0).toString();
+//       Set<String> expiredV = redisService.getSet(phone+phone);
+//        String e=new ArrayList(expiredV).get(0).toString();
+//        System.out.println(e);
+       // String e = redisService.getValue(phone);
+        String e= (String) redisTemplate.opsForValue().get(phone);
         System.out.println(e);
-        //String e = redisService.getValue(phone+phone);
+        logger.info(e);
         if(StringUtil.isNullOrNullStr(e)){
             return  ResultGenerator.genFailResult("验证码过期");
         }else {
@@ -134,27 +125,30 @@ public class LoginController {
         }
     }
     @PostMapping(value = "/login" ,produces = {"application/json", "application/xml"})
-    public Result adminLogin(@RequestBody LoginParam loginParam){
-        String expiredV = redisService.getValue(loginParam.getPhone());
-        if (expiredV==null){
-            return ResultGenerator.genFailResult("验证码错误");
+    public Result adminLogin(@RequestBody LoginParam loginParam) {
+        //获取验证码
+        String cachedCode = (String) redisTemplate.opsForValue().get(loginParam.getPhone());
+        String code = loginParam.getCode();
+        if (!code.equals(cachedCode)){
+            return ResultGenerator.genFailResult("验证码错误/过期");
         }
-        if (loginParam.getType() == 0){
-            try {
-                Result netResult = userService.userLogin(loginParam);
-                return netResult;
-            }catch (Exception e){
-                return ResultGenerator.genFailResult("未知异常"+e.getMessage());
+                if (loginParam.getType() == 0) {
+                    try {
+                        Result result = userService.userLogin(loginParam);
+                        return result;
+                    } catch (Exception e) {
+                        return ResultGenerator.genFailResult("未知异常" + e.getMessage());
+                    }
+                } else {
+                    try {
+                        Result result= userService.adminlogin(loginParam);
+                        return result;
+                    } catch (Exception e) {
+                        return ResultGenerator.genFailResult("未知异常" + e.getMessage());
+                    }
+                }
             }
-        }else {
-            try {
-                Result netResult = userService.adminlogin(loginParam);
-                return netResult;
-            }catch (Exception e){
-                return ResultGenerator.genFailResult("未知异常"+e.getMessage());
-            }
-        }
-    }
+
 
 //    /**
 //     * 管理员登录
@@ -187,9 +181,9 @@ public class LoginController {
 //    }
 
     @PostMapping("/register")
-    public Result register(@RequestBody Users user) {
+    public Result register(@RequestBody RegisterParam registerParam) {
         try {
-            Result result = userService.register(user);
+            Result result = userService.register(registerParam);
             return result;
         } catch (Exception e) {
             return ResultGenerator.genFailResult("未知的异常"+e.getMessage());

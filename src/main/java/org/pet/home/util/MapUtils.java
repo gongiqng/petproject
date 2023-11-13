@@ -1,5 +1,6 @@
 package org.pet.home.util;
 
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import java.io.BufferedReader;
@@ -8,21 +9,19 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
-/**
- * @description:TODO
- * @author: 龚强
- * @data:
- * 湖北省武汉市珞珈山街道八一路299号
- **/
+//湖北省武汉市珞珈山街道八一路299号
+
 public class MapUtils {
     public static void main(String[] args) {
         try {
             // 1、根据地址获取经纬度
-            Map<String, String> lonAndLat = getLonAndLat("湖北省武汉市珞珈山街道八一路299号", "key");
+            Map<String, String> lonAndLat = getLonAndLat("浙江省杭州市滨江区江汉路1515号", "cb8dc1ceaacf132401b1f1ea462753dc");
             System.out.println("转换后经纬度为：" + lonAndLat);
 
             // 2、根据经纬度获取地址
-            String formattedAddress = getAMapByLngAndLat("120.204798", "30.201000", "高德key");
+            //39.916527
+            //116.397128
+            String formattedAddress = getAMapByLngAndLat("110.397128", "31.916527", "cb8dc1ceaacf132401b1f1ea462753dc");
             System.out.println("转换后地址为：" + formattedAddress);
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,7 +40,7 @@ public class MapUtils {
         String queryUrl = "http://restapi.amap.com/v3/geocode/geo?key=" + key + "&address=" + address;
         // 高德接口返回的是JSON格式的字符串
         String queryResult = getResponse(queryUrl);
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         JSONObject obj = JSONObject.parseObject(queryResult);
         if (obj.get("status").toString().equals("1")) {
             JSONObject jobJSON = JSONObject.parseObject(obj.get("geocodes").toString().substring(1, obj.get("geocodes").toString().length() - 1));
