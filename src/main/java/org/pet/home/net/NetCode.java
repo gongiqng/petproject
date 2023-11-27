@@ -78,4 +78,21 @@ public class NetCode {
     public static final int ISINOCULATION_INVALID =0X32;
     public static final int BIRTH_INVALID = 0X33;
     public static final int ID_INVALID = 0x34;
+    public static final int PET_TYPE_ERROR =0x35 ;
+    public static final int USER_LIST_IS_NULL =0x36 ;
+    public static final int LOGIN_ERROR = 0x37;
+    public static final int TYPE_ERROR =0x39 ;
+    public static final int STATE_ERROR =0X40 ;
+    public static final int PET_PROCESS_ERROR = 0x41;
+    public static final int SHOP_LIST_IS_NULL =0x42 ;
+    public static final int SHOP_IS_NULL = 0x43;
+    public static final int SELL_PRICE_INVALID =0x44 ;
+    public static final int PETSHOP_ERROR = 0x45;
+    public static final int PETSHOP_IS_BUY =0x46 ;
+    public static final int BUY_ERROR =0x47 ;
+    public static final int PRODUCT_IS_NULL = 0X48;
+    public static final int STATE_INVALID = 0x49;
+    public static final int COUNT_ERROR =0X48 ;
+    public static int Price_INVALID=0x50;
+    public static int Count_INVALID=0x51;
 }

@@ -4,6 +4,7 @@ import org.pet.home.interceptor.TokenInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -35,7 +36,22 @@ public class TokenConfig implements WebMvcConfigurer {
                 "/verifycode",
                 "/register",
                 "/adminlogin",
-                "/userLogin"
+                "/userLogin",
+                "/user/publish",
+                "/user//processingList",
+                "/user//userListById",
+                "/user/shoplist",
+                "/shop/register",
+                "/shop//successfulAudit",
+                "/user/listbyshopid",
+                "/user/finish",
+                "/buy",
+                "/addPetShop",
+                "/petshelving",
+                "/onProduct",
+                 "/offProduct",
+                "/productList",
+                 "/shoping"
         );
     }
 }

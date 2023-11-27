@@ -21,5 +21,6 @@ public class Shop {
     private String address;
     private String logo;
     private Employee admin;
-    private Long adminId;
+    private Long admin_id;
+    private Location location;
 }

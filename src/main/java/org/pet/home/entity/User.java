@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @data:
  **/
 @Data
-public class Users implements Serializable {
+public class User implements Serializable {
     //用户id
     private Long id;
     //用户名
@@ -29,4 +29,6 @@ public class Users implements Serializable {
     private int role;
     //token
     private String token;
+    private double price;
+    private Long product_id;
 }

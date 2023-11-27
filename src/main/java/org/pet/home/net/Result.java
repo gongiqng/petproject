@@ -1,5 +1,7 @@
 package org.pet.home.net;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 /**
@@ -22,6 +24,9 @@ public class Result<T>{
         this.message = message;
     }
 
+    public static JSONObject StringToJson(String s){
+        return JSON.parseObject(s);
+    }
 
 
     public int getResultCode() {
@@ -50,7 +55,7 @@ public class Result<T>{
 
     @Override
     public String toString() {
-        return "NetResult{" +
+        return "Result{" +
                 "resultCode=" + resultCode +
                 ", message='" + message + '\'' +
                 ", data=" + data +

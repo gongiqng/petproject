@@ -28,6 +28,11 @@ public interface PetMapper {
     @Select("SELECT * FROM t_pet")
     List<Pet> list();
 
+    /**
+     * 通过id查找宠物
+     * @param id
+     * @return
+     */
     @Select("SELECT * FROM t_pet where id=#{id}")
     Pet findById(Long id);
 }

@@ -1,7 +1,7 @@
 package org.pet.home.service;
 
-import org.pet.home.entity.Employee;
-import org.pet.home.entity.Users;
+import org.apache.ibatis.annotations.Param;
+import org.pet.home.entity.User;
 import org.pet.home.net.Result;
 import org.pet.home.net.param.LoginParam;
 import org.pet.home.net.param.RegisterParam;
@@ -17,8 +17,15 @@ public interface IUserService {
      */
     Result sendRegisterCode(String phone);
    // Result adminLogin(Employee employee);
+    //注册用户
     Result register(RegisterParam registerParam);
-    Result adminlogin(LoginParam loginParam);
+    //管理员登录
+    Result login(LoginParam loginParam);
+    //检查号码
+    User CheckPhone(String phone);
 
-    Result userLogin(LoginParam loginParam);
+    //查询用户
+    User findById(long id);
+    void update(double price,Long product_id,Long id);
+    int recharge(double price,Long id);
 }

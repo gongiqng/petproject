@@ -9,11 +9,10 @@ import lombok.Data;
  **/
 @Data
 public class RegisterParam {
-    private String code;
-    private String username;
-    private String phone;
-    private String password;
-    private int state;
-    private int age;
-    private Long registerTime;
+    public String username;
+    public String email;
+    public String phone;
+    public String password;
+    public int age;
+    public String code;
 }

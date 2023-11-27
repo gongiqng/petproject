@@ -1,6 +1,7 @@
 package org.pet.home.dao;
 
 import org.apache.ibatis.annotations.*;
+import org.pet.home.entity.Employee;
 import org.pet.home.entity.Shop;
 import org.springframework.stereotype.Repository;
 
@@ -54,4 +55,6 @@ public interface ShopMapper {
     int count();
     @Select("select * from t_shop where address=#{address}")
     Shop findByAddress(String address);
+    @Update("update t_shop set admin_id=#{e.id} where id=#{id}")
+    void addAdmin(Employee e, long id);
 }

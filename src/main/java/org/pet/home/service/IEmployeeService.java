@@ -17,4 +17,5 @@ public interface IEmployeeService {
     Employee findIncumbency(Long id);
     List<Employee> findAll();
     Employee login(Employee employee);
+    Employee  getAdmin(String phone,String password);
 }

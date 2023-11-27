@@ -70,4 +70,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
     public Employee login(Employee employee) {
         return employeeMapper.login(employee);
     }
+
+    @Override
+    public Employee getAdmin(String phone, String password) {
+        return employeeMapper.getAdmin(phone,password);
+    }
 }

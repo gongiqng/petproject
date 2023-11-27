@@ -1,6 +1,6 @@
 package org.pet.home.net.param;
 
-import org.pet.home.entity.UserMsg;
+import org.pet.home.entity.UserFindShop;
 
 /**
  * @description:TODO
@@ -8,6 +8,5 @@ import org.pet.home.entity.UserMsg;
  * @data:
  **/
 public class AddPetParam {
-    public UserMsg userMsg;
-    public int user_id;
+    public UserFindShop userMsg;
 }

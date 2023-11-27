@@ -20,6 +20,10 @@ public interface EmployeeMapper {
             "values(#{username},#{email},#{phone},#{password},#{age},#{state},#{did})")
     @Options(useGeneratedKeys = true,keyProperty = "id",keyColumn = "id")
     int add(Employee employee);
+    @Insert("insert into t_employee(username,email,phone,password,age,state)" +
+            "values(#{username},#{email},#{phone},#{password},#{age},#{state})")
+    @Options(useGeneratedKeys = true,keyProperty = "id",keyColumn = "id")
+    int insert(Employee e);
     @Delete("delete from t_employee where id=#{id}")
     void remove(Long id);
 
@@ -42,5 +46,5 @@ public interface EmployeeMapper {
    @Select("select * from t_employee where username=#{username} and password=#{password}")
    Employee login(Employee employee);
     @Select("select * from t_employee where phone=#{phone} and password=#{password}")
-    Employee select(String phone,String password);
+    Employee  getAdmin(String phone,String password);
 }

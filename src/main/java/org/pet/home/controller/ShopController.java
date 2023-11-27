@@ -1,17 +1,20 @@
 package org.pet.home.controller;
 
 import io.swagger.annotations.Api;
+import org.pet.home.entity.Location;
 import org.pet.home.net.Result;
 import org.pet.home.entity.Employee;
 import org.pet.home.entity.Shop;
 import org.pet.home.net.NetCode;
 import org.pet.home.service.IShopService;
+import org.pet.home.util.GaoDeMapUtil;
 import org.pet.home.util.ResultGenerator;
 import org.pet.home.util.ShopUtil;
 import org.pet.home.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -43,17 +46,27 @@ public class ShopController {
         if (StringUtil.isEmpty(shop.getLogo())) {
             return ResultGenerator.genErrorResult(NetCode.SHOP_LOGO_INVALID, "logo不能为空");
         }
+
+        try {
+            Location userLocation = GaoDeMapUtil.getLngAndLag(shop.getAddress());
+            shop.setLocation(userLocation);
+        } catch (UnsupportedEncodingException e) {
+            //说明地址是非法的，至少百度的解析不了
+            return ResultGenerator.genErrorResult(NetCode.SHOP_ADDRESS_INVALID, "非法的地址");
+        }
         if (shop.getAdmin() == null) {
             Employee employee = new Employee();
             employee.setId(0l);
             shop.setAdmin(employee);
         }
+
+
         shop.setRegisterTime(System.currentTimeMillis());
         int count = iShopService.add(shop);
         if (count != 1) {
             return ResultGenerator.genFailResult("添加shop失败");
         }
-        return ResultGenerator.genSuccessResult();
+        return ResultGenerator.genSuccessResult("添加成功");
     }
 
     @RequestMapping("/list")

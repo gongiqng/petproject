@@ -2,7 +2,7 @@ package org.pet.home.dao;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.pet.home.entity.UserMsg;
+import org.pet.home.entity.UserFindShop;
 import org.pet.home.util.GaoDeMapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,12 +18,12 @@ import java.util.Objects;
  **/
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserMsgMapperTest {
+public class UserFindShopMapperTest {
     @Autowired
     public  UserMsgMapper userMsgMapper;
     @Test
     public void testAdd() throws UnsupportedEncodingException {
-        UserMsg userMsg = new UserMsg();
+        UserFindShop userMsg = new UserFindShop();
         userMsg.setAddress(Objects.requireNonNull(GaoDeMapUtil.getLngAndLag("湖北省武汉市洪山区光谷广场")).getFormattedAddress());
         userMsg.setAdminId(317L);
         userMsg.setShopId(30L);
